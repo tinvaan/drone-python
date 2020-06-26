@@ -2,6 +2,11 @@
 import os
 
 
-token = os.environ.get('DRONE_TOKEN')
-host = os.environ.get('DRONE_SERVER')
-host = host if host is not None else 'https://cloud.drone.io'
+def api_token():
+    if not os.environ.get('DRONE_TOKEN'):
+        raise EnvironmentError('')
+    return os.environ.get('DRONE_TOKEN')
+
+
+def api_server():
+    return os.environ.get('DRONE_SERVER', 'https://cloud.drone.io')
