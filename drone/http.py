@@ -1,5 +1,4 @@
 
-import json
 import requests
 
 from . import config
@@ -53,4 +52,4 @@ def delete(url):
     r = requests.delete(url, headers=headers)
     if not r.ok:
         r.raise_for_status()
-    return r.json()
+    return r.text

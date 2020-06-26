@@ -19,8 +19,8 @@ class Drone:
         def create(self, **kwargs):
             return http.post(self.route, data=kwargs)
 
-        def update(self, secret):
-            return http.post('%s/%s' % (self.route, secret))
+        def update(self, secret, **kwargs):
+            return http.patch('%s/%s' % (self.route, secret), data=kwargs)
 
         def delete(self, secret):
             return http.delete('%s/%s' % (self.route, secret))
