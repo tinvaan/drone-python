@@ -1,16 +1,19 @@
 
 import requests
 
-from .config import host, token
+from . import http, config
 
 
 class Action:
     def __init__(self, **kwargs):
-        assert host is not None
-        assert token is not None
+        self.host = config.api_server()
+        self.token = config.api_token()
         self.user = kwargs.get('user')
         self.repo = kwargs.get('repo')
         self.cron = kwargs.get('cron')
+
+    def all(self):
+        return http.get(self.route)
 
     def logs(self, name, stage, step):
         raise NotImplementedError()
@@ -18,26 +21,23 @@ class Action:
     def create(self, namespace, build, **kwargs):
         raise NotImplementedError()
 
-    def history(self):
-        return requests.get(self.route).json()
-
     def info(self, name):
-        return requests.get('%s/%s' % (self.route, name)).json()
+        return http.get('%s/%s' % (self.route, name))
 
     def stop(self, name):
-        return requests.delete('%s/%s' % (self.route, name)).json()
+        return http.delete('%s/%s' % (self.route, name))
 
     def restart(self, name):
-        return requests.post('%s/%s' % (self.route, name)).json()
+        return http.post('%s/%s' % (self.route, name))
 
     def approve(self, name):
-        return requests.post('%s/%s/approve' % (self.route, name)).json()
+        return http.post('%s/%s/approve' % (self.route, name))
 
     def decline(self, name):
-        return requests.post('%s/%s/decline' % (self.route, name)).json()
+        return http.post('%s/%s/decline' % (self.route, name))
 
     def promote(self, name, **kwargs):
-        return requests.post('%s/%s/promote' % (self.route, name)).json()
+        return http.post('%s/%s/promote' % (self.route, name))
 
 
 class Drone:
@@ -46,15 +46,15 @@ class Drone:
             super().__init__(**kwargs)
             assert self.user is not None
             assert self.repo is not None
-            self.route = host + '/api/repos/%s/%s/builds' % (self.user, self.repo)
+            self.route = '%s/api/repos/%s/%s/builds' % (
+                self.host, self.user, self.repo)
 
         def create(self, ns, build, **kwargs):
-            url = host + '/api/repos/%s/%s/builds' % (ns, build)
-            return requests.post(url, params=kwargs).json()
+            url = self.host + '/api/repos/%s/%s/builds' % (ns, build)
+            return http.post(url, params=kwargs)
 
         def logs(self, build, stage, step):
-            return requests.get(
-                self.route + '/%s/logs/%s/%s' % (build, stage, step)).json()
+            return http.get('%s/%s/logs/%s/%s' % (self.route, build, stage, step))
 
 
     class Cron(Action):
@@ -63,16 +63,17 @@ class Drone:
             assert self.user is not None
             assert self.repo is not None
             assert self.cron is not None
-            self.route = host + '/api/repos/%s/%s/cron' % (self.user, self.repo)
+            self.route = '%s/api/repos/%s/%s/cron' % (
+                self.host, self.user, self.repo)
 
         def delete(self):
-            return requests.delete(self.route + '/%s' % self.cron).json()
+            return http.delete('%s/%s' % (self.route, self.cron))
 
         def create(self, **kwargs):
-            return requests.post(self.route, data=kwargs).json()
+            return http.post(self.route, data=kwargs)
 
         def update(self, **kwargs):
-            return requests.patch(self.route + '/%s' % self.cron, data=kwargs).json()
+            return http.patch('%s/%s' % (self.route, self.cron), data=kwargs)
 
 
     class Repo(Action):
@@ -80,19 +81,19 @@ class Drone:
             super().__init__(**kwargs)
             assert self.user is not None
             assert self.repo is not None
-            self.route = host + '/api/repos/%s/%s' % (self.user, self.repo)
+            self.route = '%s/api/repos/%s/%s' % (self.host, self.user, self.repo)
 
         def info(self):
-            return requests.get(self.route).json()
+            return http.get(self.route)
 
         def enable(self):
-            return requests.post(self.route).json()
+            return http.post(self.route)
 
         def disable(self):
-            return requests.delete(self.route).json()
+            return http.delete(self.route)
 
         def repair(self):
-            return requests.post(self.route + '/repair').json()
+            return http.post(self.route + '/repair')
 
         def update(self, **kwargs):
-            return requests.patch(self.route, data=kwargs).json()
+            return http.patch(self.route, data=kwargs)

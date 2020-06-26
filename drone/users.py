@@ -1,7 +1,5 @@
 
-import requests
-
-from .config import host
+from . import http, config
 
 
 class Drone:
@@ -9,49 +7,57 @@ class Drone:
         def __init__(self, user, repo):
             self.user = user
             self.repo = repo
-            self.route = host + '/api/repos/%s/%s/secrets' % (self.user, self.repo)
+            self.route = '%s/api/repos/%s/%s/secrets' % (
+                config.api_server(), self.user, self.repo)
+
+        def all(self):
+            return http.get(self.route)
 
         def info(self, secret):
-            return requests.get('%s/%s' % (self.route, secret)).json()
-
-        def history(self):
-            return requests.get(self.route).json()
+            return http.get('%s/%s' % (self.route, secret))
 
         def create(self, **kwargs):
-            return requests.post(self.route, data=kwargs).json()
+            return http.post(self.route, data=kwargs)
 
         def update(self, secret):
-            return requests.post('%s/%s' % (self.route, secret)).json()
+            return http.post('%s/%s' % (self.route, secret))
 
         def delete(self, secret):
-            return requests.delete('%s/%s' % (self.route, secret)).json()
+            return http.delete('%s/%s' % (self.route, secret))
 
 
     class User:
         def __init__(self):
-            self.route = host + '/api/users'
+            self.route = '%s/api/user' % config.api_server()
 
-        def history(self):
-            return requests.get(self.route).json()
+        def feed(self):
+            return http.get(self.route + '/builds')
+
+        def info(self):
+            return http.get(self.route)
+
+        def repos(self, **kwargs):
+            return http.get(self.route + '/repos', params=kwargs)
+
+        def sync(self, **kwargs):
+            return http.post(self.route + '/repos', data=kwargs)
+
+
+    class Users:
+        def __init__(self):
+            self.route = '%s/api/users' % config.api_server()
+
+        def all(self):
+            return http.get(self.route)
+
+        def info(self, user):
+            return http.get('%s/%s' % (self.route, user))
+
+        def delete(self, user):
+            return http.get('%s/%s' % (self.route, user))
 
         def create(self, **kwargs):
-            return requests.post(self.route, data=kwargs).json()
+            return http.post(self.route, data=kwargs)
 
-        def update(self, login):
-            return requests.patch('%s/%s' % (self.route, login)).json()
-
-        def delete(self, login):
-            return requests.delete('%s/%s' % (self.route, login)).json()
-
-        def builds(self):
-            return requests.get(self.route + '/builds').json()
-
-        def repos(self, sync=False, **kwargs):
-            if not sync:
-                return requests.get(self.route + '/repos').json()
-            return requests.post(self.route + '/repos', data=kwargs).json()
-
-        def info(self, user=None):
-            if not user:
-                return requests.get(self.route).json()
-            return requests.get('%s/%s' % (self.route, user)).json()
+        def update(self, user, **kwargs):
+            return http.post('%s/%s' % (self.route, user), data=kwargs)
