@@ -1,9 +1,12 @@
 
+import json
 import requests
 
 from . import config
+from .decorators import jsonargs
 
 
+@jsonargs
 def get(url, params=None):
     headers = {'Authorization': 'Bearer %s' % config.api_token()}
     r = requests.get(url, headers=headers) if not params else \
@@ -13,6 +16,7 @@ def get(url, params=None):
     return r.json()
 
 
+@jsonargs
 def post(url, params=None, data=None):
     headers = {'Authorization': 'Bearer %s' % config.api_token()}
     if params and data:
@@ -28,6 +32,7 @@ def post(url, params=None, data=None):
     return r.json()
 
 
+@jsonargs
 def patch(url, params=None, data=None):
     headers = {'Authorization': 'Bearer %s' % config.api_token()}
     if params and data:
