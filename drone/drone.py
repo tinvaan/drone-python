@@ -4,48 +4,37 @@ import requests
 from . import http, config
 
 
-class Action:
-    def __init__(self, **kwargs):
+class Actions:
+    def __init__(self, user, repo):
+        self.user = user
+        self.repo = repo
         self.host = config.api_server()
         self.token = config.api_token()
-        self.user = kwargs.get('user')
-        self.repo = kwargs.get('repo')
-        self.cron = kwargs.get('cron')
 
     def all(self):
         return http.get(self.route)
 
-    def logs(self, name, stage, step):
-        raise NotImplementedError()
-
-    def create(self, namespace, build, **kwargs):
-        raise NotImplementedError()
-
     def info(self, name):
         return http.get('%s/%s' % (self.route, name))
 
-    def stop(self, name):
-        return http.delete('%s/%s' % (self.route, name))
+    def view(self, name):
+        return self.info(name)
 
-    def restart(self, name):
-        return http.post('%s/%s' % (self.route, name))
+    def delete(self, name):
+        raise NotImplementedError()
 
-    def approve(self, name):
-        return http.post('%s/%s/approve' % (self.route, name))
+    def create(self, **kwargs):
+        raise NotImplementedError()
 
-    def decline(self, name):
-        return http.post('%s/%s/decline' % (self.route, name))
+    def update(self, name, **kwargs):
+        raise NotImplementedError()
 
-    def promote(self, name, **kwargs):
-        return http.post('%s/%s/promote' % (self.route, name))
 
 
 class Drone:
-    class Build(Action):
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            assert self.user is not None
-            assert self.repo is not None
+    class Build(Actions):
+        def __init__(self, user, repo):
+            super().__init__(user, repo)
             self.route = '%s/api/repos/%s/%s/builds' % (
                 self.host, self.user, self.repo)
 
@@ -56,27 +45,39 @@ class Drone:
         def logs(self, build, stage, step):
             return http.get('%s/%s/logs/%s/%s' % (self.route, build, stage, step))
 
+        def promote(self, name, **kwargs):
+            return http.post('%s/%s/promote' % (self.route, name))
 
-    class Cron(Action):
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            assert self.user is not None
-            assert self.repo is not None
-            assert self.cron is not None
+        def decline(self, name):
+            return http.post('%s/%s/decline' % (self.route, name))
+
+        def approve(self, name):
+            return http.post('%s/%s/approve' % (self.route, name))
+
+        def restart(self, name):
+            return http.post('%s/%s' % (self.route, name))
+
+        def stop(self, name):
+            return http.delete('%s/%s' % (self.route, name))
+
+
+    class Cron(Actions):
+        def __init__(self, user, repo):
+            super().__init__(user, repo)
             self.route = '%s/api/repos/%s/%s/cron' % (
                 self.host, self.user, self.repo)
 
-        def delete(self):
-            return http.delete('%s/%s' % (self.route, self.cron))
+        def delete(self, cron):
+            return http.delete('%s/%s' % (self.route, cron))
 
         def create(self, **kwargs):
             return http.post(self.route, data=kwargs)
 
-        def update(self, **kwargs):
-            return http.patch('%s/%s' % (self.route, self.cron), data=kwargs)
+        def update(self, cron, **kwargs):
+            return http.patch('%s/%s' % (self.route, cron), data=kwargs)
 
 
-    class Repo(Action):
+    class Repo(Actions):
         def __init__(self, **kwargs):
             super().__init__(**kwargs)
             assert self.user is not None
