@@ -11,6 +11,20 @@ class Actions:
         self.host = config.api_server()
         self.token = config.api_token()
 
+    def __check__(self):
+        """ TODO: There should be a way to check if secret
+            provided matches against the username in the request
+        """
+        try:
+            secret = http.get('%s/api/repos/%s/%s/secrets/%s' % (
+                self.host, self.user, self.repo, self.token))
+            if secret.get('name') != self.user:
+                raise EnvironmentError('Secrets for %s do not match' % self.user)
+        except requests.HTTPError as err:
+            if err.response.status_code in range(400, 500):
+                raise EnvironmentError('Secrets for %s do not match' % self.user)
+            raise err
+
     def all(self):
         return http.get(self.route)
 
@@ -79,11 +93,12 @@ class Drone:
 
 
     class Repo(Actions):
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            assert self.user is not None
-            assert self.repo is not None
+        def __init__(self, user, repo):
+            super().__init__(user, repo)
             self.route = '%s/api/repos/%s/%s' % (self.host, self.user, self.repo)
+
+        def all(self):
+            return http.get('%s/api/user/repos' % self.host)
 
         def info(self):
             return http.get(self.route)
@@ -99,3 +114,7 @@ class Drone:
 
         def update(self, **kwargs):
             return http.patch(self.route, data=kwargs)
+
+        def chown(self, **kwargs):
+            return http.post(self.route + '/chown', data=kwargs)
+    
