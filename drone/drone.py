@@ -43,22 +43,23 @@ class Drone:
             return http.post(url, params=kwargs)
 
         def logs(self, build, stage, step):
-            return http.get('%s/%s/logs/%s/%s' % (self.route, build, stage, step))
+            return http.get(
+                '%s/%s/logs/%s/%s' % (self.route, build, stage, step))
 
-        def promote(self, name, **kwargs):
-            return http.post('%s/%s/promote' % (self.route, name))
+        def promote(self, build, **kwargs):
+            return http.post('%s/%s/promote' % (self.route, build))
 
-        def decline(self, name):
-            return http.post('%s/%s/decline' % (self.route, name))
+        def decline(self, build):
+            return http.post('%s/%s/decline' % (self.route, build))
 
-        def approve(self, name):
-            return http.post('%s/%s/approve' % (self.route, name))
+        def approve(self, build):
+            return http.post('%s/%s/approve' % (self.route, build))
 
-        def restart(self, name):
-            return http.post('%s/%s' % (self.route, name))
+        def restart(self, build):
+            return http.post('%s/%s' % (self.route, build))
 
-        def stop(self, name):
-            return http.delete('%s/%s' % (self.route, name))
+        def stop(self, build):
+            return http.delete('%s/%s' % (self.route, build))
 
 
     class Cron(Actions):
