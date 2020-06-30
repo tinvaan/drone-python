@@ -1,0 +1,10 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: test
+    image: harishnavnit/pydroneio
+    commands:
+      - pip install pytest
+      - pytest tests/

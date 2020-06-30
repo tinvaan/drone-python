@@ -4,13 +4,16 @@
 from setuptools import setup
 
 
+def requirements():
+    with open('./requirements.txt', 'r') as f:
+        return f.read().splitlines()
+
+
 setup(
     name='PyDrone',
     version='1.0.0',
     py_modules=['drone'],
     include_package_data=True,
-    install_requirements=[
-        "requests==2.24.0"
-    ]
+    install_requirements=requirements()
 )
 
