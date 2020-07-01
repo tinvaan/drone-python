@@ -5,6 +5,10 @@ name: default
 steps:
   - name: test
     image: harishnavnit/pydroneio
+    environment:
+      DRONE_TOKEN:
+        from_secret: DRONE_TOKEN
     commands:
       - pip install pytest
-      - pytest tests/
+      - find tests -iname "*.py" | grep -v "test_api.py" | xargs pytest
+      - pytest tests/test_api.py
