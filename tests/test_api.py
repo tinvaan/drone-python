@@ -145,36 +145,36 @@ class TestApi(unittest.TestCase):
     def test_repo(self):
         mock = Drone.Repo
         mock.__init__ = MagicMock(return_value=None)
-        self.drone.repo
+        self.drone.repos
         mock.__init__.assert_called()
 
         mock.all = MagicMock(return_value=list)
-        self.drone.repo.all()
+        self.drone.repos.all()
         mock.all.assert_called()
 
         mock.info = MagicMock(return_value=dict)
-        self.drone.repo.info()
+        self.drone.repos.info()
         mock.info.assert_called()
 
         mock.chown = MagicMock(return_value=dict)
         args = {'foo': 'bar', 'bar': 'foo'}
-        self.drone.repo.chown(**args)
+        self.drone.repos.chown(**args)
         mock.chown.assert_called()
 
         mock.disable = MagicMock(return_value=dict)
-        self.drone.repo.disable()
+        self.drone.repos.disable()
         mock.disable.assert_called()
 
         mock.enable = MagicMock(return_value=dict)
-        self.drone.repo.enable()
+        self.drone.repos.enable()
         mock.enable.assert_called()
 
         mock.repair = MagicMock(return_value=dict)
-        self.drone.repo.repair()
+        self.drone.repos.repair()
         mock.repair.assert_called()
 
         mock.update = MagicMock(return_value=dict)
-        self.drone.repo.update(**args)
+        self.drone.repos.update(**args)
         mock.update.assert_called()
 
 
