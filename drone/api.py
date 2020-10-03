@@ -3,7 +3,7 @@ from .drone import Drone
 from .users import Drone as Users
 
 
-class Instance:
+class Client:
     def __init__(self, user, repo):
         self.owner = user
         self.repository = repo
@@ -18,20 +18,20 @@ class Instance:
 
     @property
     def secrets(self):
-        return Users.Secrets(self.user, self.repository)
+        return Users.Secrets(self.owner, self.repository)
 
     @property
     def build(self):
-        return Drone.Build(self.user, self.repository)
+        return Drone.Build(self.owner, self.repository)
 
     @property
     def cron(self):
-        return Drone.Cron(self.user, self.repository)
+        return Drone.Cron(self.owner, self.repository)
 
     @property
-    def repo(self):
-        return Drone.Repo(self.user, self.repository)
+    def repos(self):
+        return Drone.Repo(self.owner, self.repository)
 
 
 def drone(user, repo):
-    return Instance(user, repo)
+    return Client(user, repo)

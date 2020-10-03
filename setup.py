@@ -25,9 +25,8 @@ setup(
     url="https://github.com/tinvaan/pydroneio",
     author="Harish Navnit",
     author_email="harishnavnit@gmail.com",
-    packages=find_packages(),
+    packages=find_packages(where='drone'),
     include_package_data=True,
-    install_requirements=requirements(),
-    py_modules=['done'],
+    install_requires=requirements(),
     python_requires=">3.6"
 )
