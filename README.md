@@ -1,11 +1,20 @@
 # PyDroneio  [![Build Status](https://cloud.drone.io/api/badges/tinvaan/PyDroneio/status.svg)](https://cloud.drone.io/tinvaan/PyDroneio)
 Python client for the [Drone CI](https://cloud.drone.io) public [remote api](https://readme.drone.io/api/overview/) built using the popular [python requests](https://pypi.org/project/requests/) library.
 
+## Installation
+Ensure you have a working installation of Python 3.x on your system.  
+Clone the repository and run the setup script provided.
+```bash
+$ git clone https://github.com/tinvaan/PyDroneio.git
+$ cd PyDroneio
+$ python setup.py install
+```
+
 ## Usage examples
 
 Fetch all linked repos
 ```python
->>> import drone
+>>> from drone import drone
 >>> client = drone('tinvaan', 'packager')
 >>> client.repos.all()
 [{'id': 799963,
@@ -53,3 +62,8 @@ Fetch all builds for a repository
  {'id': 341144, ... 'version': 3}]
 
 ```
+
+## Contribute
+If you notice any issues, bugs or missing features in this project, please feel free to open tickets(github issues) or pull requests for the same.
+
+If you would like to contribute code, check out the open issues and if you need help getting started, shoot a mail to harishnavnit@gmail.com 
