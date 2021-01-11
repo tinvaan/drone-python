@@ -10,6 +10,13 @@ $ cd PyDroneio
 $ python setup.py install
 ```
 
+## Environment
+Ensure you have the `DRONE_TOKEN` and optionally, the `DRONE_SERVER` environment variables setup correctly.
+```bash
+$ export DRONE_SERVER="https://cloud.drone.io"
+$ export DRONE_TOKEN="<your Drone CI access token>
+```
+
 ## Usage examples
 
 Fetch all linked repos
