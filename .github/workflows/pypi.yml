@@ -1,6 +1,8 @@
-name: Upload Python Package
+name: Upload latest release to PyPi
 
-on: [push]
+on:
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -22,4 +24,3 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
           twine upload dist/*
-
