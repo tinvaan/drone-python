@@ -17,7 +17,7 @@ def description():
 
 
 setup(
-    name='PyDrone',
+    name='drone-python',
     version='1.0.0',
     description="Python client for the Drone CI public API",
     long_description=description(),
