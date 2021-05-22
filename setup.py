@@ -22,7 +22,7 @@ setup(
     description="Python client for the Drone CI public API",
     long_description=description(),
     long_description_content_type="text/markdown",
-    url="https://github.com/tinvaan/pydroneio",
+    url="https://github.com/tinvaan/drone-python",
     author="Harish Navnit",
     author_email="harishnavnit@gmail.com",
     packages=find_packages(),
