@@ -2,13 +2,19 @@
 Python client for the [Drone CI](https://cloud.drone.io) public [remote api](https://readme.drone.io/api/overview/) built using the popular [python requests](https://pypi.org/project/requests/) library.
 
 ## Installation
+* Using Python package manager (pip)
+  ```bash
+  $ pip install drone-python
+  ```
+
+* From source  
 Ensure you have a working installation of Python 3.x on your system.  
 Clone the repository and run the setup script provided.
-```bash
-$ git clone https://github.com/tinvaan/PyDroneio.git
-$ cd PyDroneio
-$ python setup.py install
-```
+  ```bash
+  $ git clone https://github.com/tinvaan/PyDroneio.git
+  $ cd PyDroneio
+  $ python setup.py install
+  ```
 
 ## Environment
 Ensure you have the `DRONE_TOKEN` and optionally, the `DRONE_SERVER` environment variables setup correctly.
