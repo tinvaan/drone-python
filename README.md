@@ -1,4 +1,4 @@
-# drone-python  [![Build Status](https://cloud.drone.io/api/badges/tinvaan/PyDroneio/status.svg)](https://cloud.drone.io/tinvaan/PyDroneio)
+# drone-python  [![Build Status](https://cloud.drone.io/api/badges/tinvaan/drone-python/status.svg)](https://cloud.drone.io/tinvaan/drone-python)
 Python client for the [Drone CI](https://cloud.drone.io) public [remote api](https://readme.drone.io/api/overview/) built using the popular [python requests](https://pypi.org/project/requests/) library.
 
 ## Installation
