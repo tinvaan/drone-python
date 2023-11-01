@@ -60,7 +60,7 @@ class Drone:
             return http.get(
                 '%s/%s/logs/%s/%s' % (self.route, build, stage, step))
 
-        def promote(self, build, , target, **kwargs):
+        def promote(self, build, target, **kwargs):
             return http.post('%s/%s/promote?target=%s' % (self.route, build, target))
 
         def decline(self, build):
